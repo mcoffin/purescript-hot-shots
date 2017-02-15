@@ -1,0 +1,25 @@
+{
+  "name": "purescript-hot-shots",
+  "licence": "MIT",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mcoffin/purescript-hot-shots.git"
+  },
+  "dependencies": {
+    "purescript-prelude": "^2.4.0",
+    "purescript-console": "^2.0.0",
+    "purescript-options": "^2.0.0",
+    "purescript-eff-functions": "^2.0.0",
+    "purescript-aff": "^2.0.2"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^2.0.0"
+  }
+}
