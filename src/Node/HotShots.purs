@@ -2,19 +2,19 @@ module Node.HotShots where
 
 import Prelude
 import Control.Monad.Aff (Aff, makeAff)
-import Control.Monad.Eff (Eff)
+import Control.Monad.Eff (kind Effect, Eff)
 import Control.Monad.Eff.Exception (Error)
+import Control.Monad.Eff.Uncurried (mkEffFn1)
 import Data.Either.Nested (Either3, either3)
 import Data.Foreign (Foreign, toForeign)
-import Data.Foreign.Class (class AsForeign, write)
-import Data.Function.Eff (mkEffFn1)
+import Data.Foreign.Class (class Encode, encode)
 import Data.Functor.Contravariant ((>$<))
 import Data.Maybe (Maybe, fromMaybe)
 import Data.Op (Op(..))
 import Data.Options (Option, Options, opt, optional, options)
 import Data.Tuple (Tuple(..))
 
-foreign import data HOTSHOTS :: !
+foreign import data HOTSHOTS :: Effect
 
 -- | Phantom options data type
 data HotShotsOptions
@@ -55,15 +55,15 @@ telegraf = opt "telegraf"
 errorHandler :: forall eff. Option HotShotsOptions (Maybe (Foreign -> Eff eff Unit))
 errorHandler = optional $ mkEffFn1 >$< opt "errorHandler"
 
-foreign import data Client :: *
+foreign import data Client :: Type
 
 hotShotsClient :: forall eff. Options HotShotsOptions -> Eff (hotshots :: HOTSHOTS | eff) Client
 hotShotsClient = clientImpl <<< options
 
 type StatsDAction a = Tuple String (Op Foreign a)
 
-statsDAction :: forall a. (AsForeign a) => String -> StatsDAction a
-statsDAction = flip Tuple $ Op write
+statsDAction :: forall a. (Encode a) => String -> StatsDAction a
+statsDAction = flip Tuple $ Op encode
 
 increment :: StatsDAction Int
 increment = statsDAction "increment"

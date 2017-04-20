@@ -1,18 +1,13 @@
 language: node_js
 node_js:
   - "7"
-before_install:
-  - npm install -g bower pulp purescript
 install:
   - npm install
-  - bower install
+  - npm run-script bower i -- --allow-root
 script:
-  - pulp build
-  - pulp test
+  - npm run-script pulp build
+  - npm test
 after_success:
-  - git tag -l $TRAVIS_TAG '--format=%(taggerdate:iso-strict)'
-  - git show $TRAVIS_TAG --no-patch --format="%aI"
-  - psc-publish --dry-run
   - >-
     test $TRAVIS_TAG &&
     echo $GITHUB_TOKEN | pulp login &&
